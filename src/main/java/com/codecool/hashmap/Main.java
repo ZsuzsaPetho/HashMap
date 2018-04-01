@@ -90,5 +90,19 @@ public class Main {
 
         map.print();
         System.out.println(map.size());
+
+
+        HashMap<Integer, String> pam = new HashMap<>();
+        pam.add(3, "lasla");
+        pam.add(9, "csalk");
+        pam.add(1, "dsavs");
+        pam.add(33, "dsfa");
+        pam.print();
+
+        HashMap<Character, String > ppp = new HashMap<>();
+        ppp.add('s', "afs");
+        ppp.add('r', "afsdfasf");
+        ppp.add('*', "asds");
+        ppp.print();
     }
 }
