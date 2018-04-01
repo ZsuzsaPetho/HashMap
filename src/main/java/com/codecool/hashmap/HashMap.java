@@ -1,5 +1,6 @@
 package com.codecool.hashmap;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -78,6 +79,7 @@ public class HashMap<K extends Comparable, V> {
             throw new KeyNotExistsError("Key " + key + " not exists");
         }
         elements[position].remove(element);
+        resizeIfNeeded();
     }
 
     public void clearAll() {
@@ -86,12 +88,56 @@ public class HashMap<K extends Comparable, V> {
         }
     }
 
+    public int size() {
+        int size = 0;
+        for (int i = 0; i < elements.length; i++) {
+            size += elements[i].size();
+        }
+        return size;
+    }
+
+    public List<KeyValue<K,V>> getListOfElements() {
+        LinkedList<KeyValue<K,V>> listOfElments = new LinkedList<>();
+        for (int i = 0; i < elements.length; i++) {
+            listOfElments.addAll(elements[i]);
+        }
+        return listOfElments;
+    }
+
     private void resizeIfNeeded(){
+        if (size() > bucketSize*2) {
+            System.out.println("DOUBLE");
+            bucketSize = bucketSize*2;
+            updateHashMapSize();
+        }
+        if (size() < bucketSize/2 && size() > 10) {
+            System.out.println("HALF");
+            bucketSize = bucketSize/2;
+            updateHashMapSize();
+        }
     // If it holds more elements than bucketSize * 2, destroy and recreate it
     // with the double size of the elements array.
     // if it holds less elements than bucketSize / 2, destroy and recreate it
     // with half size of the elements array.
-}
+    }
+
+    private void updateHashMapSize() {
+        List<KeyValue<K,V>> list = getListOfElements();
+        elements = new LinkedList[bucketSize];
+        for (int i = 0; i < elements.length; i++) {
+            elements[i] = new LinkedList<>();
+        }
+        print();
+        for (KeyValue<K,V> element: list) {
+            copy(element.getKey(), element.getValue());
+        }
+    }
+
+    private void copy(K key, V value) {
+        int position = getHash(key);
+        LinkedList list = elements[position];
+        list.add(new KeyValue<>(key, value));
+    }
 
 // + other functions, like clearAll(), delete(),..
 
